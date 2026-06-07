@@ -247,33 +247,27 @@ slot_hint = (
 st.markdown(f"<div class='info-note'>▲ {slot_hint}</div>", unsafe_allow_html=True)
 
 if top5:
-    sig_records = []
+    headers = ["排名","代碼","股票名稱","成交量（張）","收盤價","漲跌幅","得分","前高","止損 (−10%)","止盈 (+50%)","動作"]
+    th = "".join(f"<th style='padding:8px 12px;text-align:left;color:#8b949e;border-bottom:1px solid #30363d;white-space:nowrap'>{h}</th>" for h in headers)
+    rows_html = ""
     for rank, r in enumerate(top5, 1):
         price = float(r.get("price", 0) or 0)
         has_slot = rank <= slots_free
-        sig_records.append({
-            "排名": rank,
-            "代碼": r.get("symbol", ""),
-            "股票名稱": r.get("name", ""),
-            "成交量（張）": fmt_vol(r.get("volume", 0)),
-            "收盤價": fmt_price(price),
-            "漲跌幅": fmt_pct(r.get("changePct", 0)),
-            "得分": r.get("points", 0),
-            "前高": fmt_price(r.get("h", 0)),
-            "止損 (−10%)": fmt_price(price * 0.9),
-            "止盈 (+50%)": fmt_price(price * 1.5),
-            "動作": "↑ 買進" if has_slot else "排隊",
-        })
-
-    df_sig = pd.DataFrame(sig_records)
-
-    def highlight_sig(row):
-        if row["動作"] == "↑ 買進":
-            return ["background-color: rgba(63,185,80,0.08)"] * len(row)
-        return ["opacity: 0.5"] * len(row)
-
-    st.dataframe(df_sig.style.apply(highlight_sig, axis=1),
-                 use_container_width=True, hide_index=True)
+        action = "↑ 買進" if has_slot else "排隊"
+        action_html = f"<span style='color:#3fb950;font-weight:700'>{action}</span>" if has_slot else f"<span style='color:#8b949e'>{action}</span>"
+        bg = "background:rgba(63,185,80,0.08)" if has_slot else "opacity:0.7"
+        vals = [rank, r.get("symbol",""), r.get("name",""), fmt_vol(r.get("volume",0)),
+                fmt_price(price), fmt_pct(r.get("changePct",0)), r.get("points",0),
+                fmt_price(r.get("h",0)), fmt_price(price*0.9), fmt_price(price*1.5), action_html]
+        tds = "".join(f"<td style='padding:7px 12px;border-bottom:1px solid #21262d'>{v}</td>" for v in vals)
+        rows_html += f"<tr style='{bg}'>{tds}</tr>"
+    sig_html = f"""
+<div style='overflow-x:auto'>
+<table style='width:100%;border-collapse:collapse;font-size:16px'>
+<thead><tr>{th}</tr></thead>
+<tbody>{rows_html}</tbody>
+</table></div>"""
+    st.markdown(sig_html, unsafe_allow_html=True)
 else:
     st.info("此日期無符合條件的訊號。")
 
@@ -286,39 +280,29 @@ st.markdown(
 )
 
 if OPEN_POSITIONS:
-    pos_records = []
+    pos_headers = ["代碼","股票名稱","進場日","進場價","最新收盤","移動停損 ▲","止盈目標","報酬率","未實現損益","動作"]
+    th2 = "".join(f"<th style='padding:8px 12px;text-align:left;color:#8b949e;border-bottom:1px solid #30363d;white-space:nowrap'>{h}</th>" for h in pos_headers)
+    pos_rows_html = ""
     for p in OPEN_POSITIONS:
         ret = (p["current"] / p["entry"] - 1) * 100
         pnl = (p["current"] - p["entry"]) * p["shares"]
         action = ("↑ 接近止盈" if ret >= 45
                   else "■ 持有（移動停損已升）" if ret >= 25
                   else "■ 持有")
-        pos_records.append({
-            "代碼": p["code"],
-            "股票名稱": p["name"],
-            "進場日": p["entry_date"],
-            "進場價": fmt_price(p["entry"]),
-            "最新收盤": fmt_price(p["current"]),
-            "移動停損 ▲": fmt_price(p["trail_sl"]),
-            "止盈目標": fmt_price(p["tp"]),
-            "報酬率": fmt_pct(ret),
-            "未實現損益": f"+NT${pnl:,.0f}" if pnl >= 0 else f"NT${pnl:,.0f}",
-            "動作": action,
-        })
-
-    df_pos = pd.DataFrame(pos_records)
-
-    def highlight_pos(row):
-        try:
-            ret = float(row["報酬率"].replace("+", "").replace("%", ""))
-        except ValueError:
-            return [""] * len(row)
-        if ret >= 40:
-            return ["background-color: rgba(63,185,80,0.12)"] * len(row)
-        return [""] * len(row)
-
-    st.dataframe(df_pos.style.apply(highlight_pos, axis=1),
-                 use_container_width=True, hide_index=True)
+        bg = "background:rgba(63,185,80,0.12)" if ret >= 40 else ""
+        pnl_str = f"+NT${pnl:,.0f}" if pnl >= 0 else f"NT${pnl:,.0f}"
+        vals = [p["code"], p["name"], p["entry_date"], fmt_price(p["entry"]),
+                fmt_price(p["current"]), fmt_price(p["trail_sl"]), fmt_price(p["tp"]),
+                fmt_pct(ret), pnl_str, action]
+        tds = "".join(f"<td style='padding:7px 12px;border-bottom:1px solid #21262d'>{v}</td>" for v in vals)
+        pos_rows_html += f"<tr style='{bg}'>{tds}</tr>"
+    pos_html = f"""
+<div style='overflow-x:auto'>
+<table style='width:100%;border-collapse:collapse;font-size:16px'>
+<thead><tr>{th2}</tr></thead>
+<tbody>{pos_rows_html}</tbody>
+</table></div>"""
+    st.markdown(pos_html, unsafe_allow_html=True)
 else:
     st.info("目前無持倉。")
 
