@@ -36,8 +36,8 @@ html, body, [class*="css"] { font-size: 12px !important; }
 [data-testid="stMetricValue"] { font-size: 20px !important; }
 [data-testid="stMetricLabel"] { font-size: 14px !important; }
 [data-testid="stCaptionContainer"] { font-size: 12px !important; }
-thead tr th { font-size: 14px !important; color: #8b949e !important; }
-tbody tr td { font-size: 14px !important; }
+thead tr th { font-size: 15px !important; color: #8b949e !important; }
+tbody tr td { font-size: 16px !important; }
 h1, h2, h3 { font-size: 16px !important; }
 .badge-grn { background: rgba(63,185,80,.15); color: #3fb950;
              border: 1px solid rgba(63,185,80,.35); border-radius: 20px;
