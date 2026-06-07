@@ -43,10 +43,10 @@ tbody tr td { font-size: 16px !important; }
 h1, h2, h3 { font-size: 16px !important; }
 .badge-grn { background: rgba(63,185,80,.15); color: #3fb950;
              border: 1px solid rgba(63,185,80,.35); border-radius: 20px;
-             padding: 1px 9px; font-size: 11px; font-weight: 600; }
+             padding: 2px 10px; font-size: 12px !important; font-weight: 600; }
 .badge-blu { background: rgba(88,166,255,.15); color: #58a6ff;
              border: 1px solid rgba(88,166,255,.35); border-radius: 20px;
-             padding: 1px 9px; font-size: 11px; font-weight: 600; }
+             padding: 2px 10px; font-size: 12px !important; font-weight: 600; }
 .info-note { background: #1c2128; border-left: 3px solid #d29922;
              padding: 6px 12px; border-radius: 4px;
              font-size: 11px; color: #8b949e; margin: 6px 0; }
