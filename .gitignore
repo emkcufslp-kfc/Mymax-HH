@@ -1,0 +1,16 @@
+# 私鑰（絕對不能上傳）
+mymax21-dashboard-2c3cce9caad1.json
+.streamlit/secrets.toml
+.streamlit/secrets.toml
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Excel 暫存
+~$*.xlsx
+
+# 本地資料（不需要在 GitHub）
+data/
