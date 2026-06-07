@@ -1,7 +1,6 @@
 # 私鑰（絕對不能上傳）
 mymax21-dashboard-2c3cce9caad1.json
 .streamlit/secrets.toml
-.streamlit/secrets.toml
 
 # Python
 __pycache__/
@@ -14,3 +13,9 @@ __pycache__/
 
 # 本地資料（不需要在 GitHub）
 data/
+
+# 個人設定（含 email）
+config/mymax21_auth.json
+
+# 其他本地腳本輸出
+*.log

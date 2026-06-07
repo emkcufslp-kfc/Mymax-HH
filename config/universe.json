@@ -1,0 +1,111 @@
+{
+  "screen": {
+    "min_history_years": 20,
+    "min_total_return_cagr": 0.09,
+    "max_drawdown_etf_or_fund": -0.45,
+    "max_drawdown_stock": -0.55,
+    "max_dividend_cut_years": 4,
+    "weights": {
+      "total_return_cagr": 0.30,
+      "dividend_cagr": 0.20,
+      "dividend_stability": 0.15,
+      "max_drawdown": 0.20,
+      "positive_years": 0.10,
+      "liquidity": 0.05
+    }
+  },
+  "assets": [
+    {
+      "ticker": "VIG",
+      "name": "Vanguard Dividend Appreciation ETF",
+      "market": "US",
+      "asset_type": "ETF"
+    },
+    {
+      "ticker": "SDY",
+      "name": "SPDR S&P Dividend ETF",
+      "market": "US",
+      "asset_type": "ETF"
+    },
+    {
+      "ticker": "COST",
+      "name": "Costco Wholesale Corporation",
+      "market": "US",
+      "asset_type": "Stock"
+    },
+    {
+      "ticker": "MSFT",
+      "name": "Microsoft Corporation",
+      "market": "US",
+      "asset_type": "Stock"
+    },
+    {
+      "ticker": "ADP",
+      "name": "Automatic Data Processing, Inc.",
+      "market": "US",
+      "asset_type": "Stock"
+    },
+    {
+      "ticker": "2330.TW",
+      "name": "Taiwan Semiconductor Manufacturing Co., Ltd.",
+      "market": "TW",
+      "asset_type": "Stock"
+    },
+    {
+      "ticker": "0050.TW",
+      "name": "Yuanta Taiwan 50 ETF",
+      "market": "TW",
+      "asset_type": "ETF"
+    },
+    {
+      "ticker": "0056.TW",
+      "name": "Yuanta/P-shares Taiwan Dividend Plus ETF",
+      "market": "TW",
+      "asset_type": "ETF"
+    },
+    {
+      "ticker": "00713.TW",
+      "name": "Yuanta Taiwan High Dividend Low Volatility ETF",
+      "market": "TW",
+      "asset_type": "ETF"
+    },
+    {
+      "ticker": "3110.HK",
+      "name": "Global X Hang Seng High Dividend Yield ETF",
+      "market": "HK",
+      "asset_type": "ETF"
+    },
+    {
+      "ticker": "0388.HK",
+      "name": "Hong Kong Exchanges and Clearing Limited",
+      "market": "HK",
+      "asset_type": "Stock"
+    },
+    {
+      "ticker": "0002.HK",
+      "name": "CLP Holdings Limited",
+      "market": "HK",
+      "asset_type": "Stock"
+    },
+    {
+      "ticker": "0003.HK",
+      "name": "The Hong Kong and China Gas Company Limited",
+      "market": "HK",
+      "asset_type": "Stock"
+    },
+    {
+      "ticker": "0941.HK",
+      "name": "China Mobile Limited",
+      "market": "HK",
+      "asset_type": "Stock"
+    },
+    {
+      "ticker": "VALUE_PARTNERS_PLACEHOLDER",
+      "name": "Value Partners High-Dividend Stocks Fund A1 USD",
+      "market": "HK",
+      "asset_type": "Fund",
+      "skip": true,
+      "notes": "Replace with a Yahoo-compatible ticker after confirming available NAV history."
+    }
+  ]
+}
