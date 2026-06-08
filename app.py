@@ -136,11 +136,14 @@ def date_label(d: str) -> str:
 
 
 # ── 持倉資料（手動維護） ──────────────────────────────────────────────────────
+# 進場規則：mymax21 訊號日 T 收盤後確認，T+1 開盤買進
+# entry = T+1 開盤價，shares = floor(100,000 / entry)
+# trail_sl = 持倉期間最高收盤 × 0.9，tp = entry × 1.5
+# 5483 中美晶：移動停損於 2026-05-15 觸發（收盤140.5 < SL147.2），已出場
+# 6805 富世達：移動停損於 2026-05-06 觸發（收盤1880 < SL1993.5），已出場
 OPEN_POSITIONS = [
-    dict(code="5483", name="中美晶",  entry_date="2026-03-12", entry=115.00, current=152.50, trail_sl=126.50, tp=172.50, shares=869),
-    dict(code="6805", name="富世達",  entry_date="2026-03-19", entry=1545.0, current=1950.0, trail_sl=1699.5, tp=2317.5, shares=64),
-    dict(code="2382", name="廣達",    entry_date="2026-04-02", entry=313.00, current=390.50, trail_sl=313.00, tp=469.50, shares=319),
-    dict(code="2881", name="富邦金",  entry_date="2026-04-09", entry=94.50,  current=118.00, trail_sl=94.50,  tp=141.75, shares=1058),
+    dict(code="2382", name="廣達",  entry_date="2026-04-02", entry=290.50, current=390.50, trail_sl=375.30, tp=435.75, shares=344),
+    dict(code="2881", name="富邦金", entry_date="2026-04-09", entry=89.20,  current=118.00, trail_sl=106.20, tp=133.80, shares=1121),
 ]
 MAX_POSITIONS = 5
 
