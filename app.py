@@ -142,8 +142,7 @@ def date_label(d: str) -> str:
 # 5483 中美晶：移動停損於 2026-05-15 觸發（收盤140.5 < SL147.2），已出場
 # 6805 富世達：移動停損於 2026-05-06 觸發（收盤1880 < SL1993.5），已出場
 OPEN_POSITIONS = [
-    dict(code="2382", name="廣達",  entry_date="2026-04-02", entry=290.50, current=390.50, trail_sl=375.30, tp=435.75, shares=344),
-    dict(code="2881", name="富邦金", entry_date="2026-04-09", entry=89.20,  current=118.00, trail_sl=106.20, tp=133.80, shares=1121),
+    dict(code="2881", name="富邦金", entry_date="2026-04-09", entry=89.20,  current=122.50, trail_sl=112.50, tp=133.80, shares=1121),
 ]
 MAX_POSITIONS = 5
 
