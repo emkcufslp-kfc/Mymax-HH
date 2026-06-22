@@ -59,8 +59,10 @@ hr { border-color: #30363d; }
 @st.cache_resource(show_spinner=False)
 def get_gsheet_client():
     """建立 gspread client（使用 Streamlit Secrets 的 service account）"""
+    info = dict(st.secrets["gcp_service_account"])
+    info["private_key"] = info["private_key"].replace("\\n", "\n")
     creds = Credentials.from_service_account_info(
-        st.secrets["gcp_service_account"],
+        info,
         scopes=SCOPES,
     )
     return gspread.authorize(creds)
@@ -312,7 +314,4 @@ else:
 st.divider()
 st.caption(
     f"mymax21 · SL10_TP50 · 僅限台股 · "
-    f"資料來源：Google Sheets · "
-    f"共 {len(date_options)} 個交易日 · "
-    "最多保存120個交易日"
-)
+    f"資料來源：Google Sheets 
