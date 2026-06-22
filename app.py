@@ -314,4 +314,7 @@ else:
 st.divider()
 st.caption(
     f"mymax21 · SL10_TP50 · 僅限台股 · "
-    f"資料來源：Google Sheets 
+    f"資料來源：Google Sheets · "
+    f"共 {len(date_options)} 個交易日 · "
+    "最多保存120個交易日"
+)
