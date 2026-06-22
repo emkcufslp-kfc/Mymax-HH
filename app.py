@@ -59,13 +59,20 @@ hr { border-color: #30363d; }
 @st.cache_resource(show_spinner=False)
 def get_gsheet_client():
     """建立 gspread client（使用 Streamlit Secrets 的 service account）"""
-    info = dict(st.secrets["gcp_service_account"])
-    info["private_key"] = info["private_key"].replace("\\n", "\n")
-    creds = Credentials.from_service_account_info(
-        info,
-        scopes=SCOPES,
-    )
-    return gspread.authorize(creds)
+    try:
+        info = dict(st.secrets["gcp_service_account"])
+        pk = info["private_key"]
+        # Show diagnostics
+        st.write(f"[DEBUG] private_key type: {type(pk)}, len: {len(pk)}")
+        st.write(f"[DEBUG] first 60 chars: {repr(pk[:60])}")
+        st.write(f"[DEBUG] contains literal \\\\n: {'\\\\n' in pk}, contains real newline: {chr(10) in pk}")
+        pk = pk.replace("\\n", "\n")
+        info["private_key"] = pk
+        creds = Credentials.from_service_account_info(info, scopes=SCOPES)
+        return gspread.authorize(creds)
+    except Exception as e:
+        st.error(f"[DEBUG] get_gsheet_client error: {type(e).__name__}: {e}")
+        raise
 
 
 @st.cache_data(ttl=300, show_spinner=False)
@@ -310,11 +317,3 @@ if OPEN_POSITIONS:
 else:
     st.info("目前無持倉。")
 
-# ── 頁尾 ──────────────────────────────────────────────────────────────────────
-st.divider()
-st.caption(
-    f"mymax21 · SL10_TP50 · 僅限台股 · "
-    f"資料來源：Google Sheets · "
-    f"共 {len(date_options)} 個交易日 · "
-    "最多保存120個交易日"
-)
