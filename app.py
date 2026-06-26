@@ -47,6 +47,9 @@ h1, h2, h3 { font-size: 16px !important; }
 .badge-blu { background: rgba(88,166,255,.15); color: #58a6ff;
              border: 1px solid rgba(88,166,255,.35); border-radius: 20px;
              padding: 2px 10px; font-size: 12px !important; font-weight: 600; }
+.badge-amb { background: rgba(210,153,34,.15); color: #d29922;
+             border: 1px solid rgba(210,153,34,.35); border-radius: 20px;
+             padding: 2px 10px; font-size: 12px !important; font-weight: 600; }
 .info-note { background: #1c2128; border-left: 3px solid #d29922;
              padding: 6px 12px; border-radius: 4px;
              font-size: 11px; color: #8b949e; margin: 6px 0; }
@@ -231,7 +234,9 @@ st.divider()
 with st.spinner("載入訊號資料…"):
     rows = load_sheet_date(selected_date)
 
-top5 = sorted(rows, key=lambda r: float(r.get("volume", 0) or 0), reverse=True)[:5]
+all_ranked = sorted(rows, key=lambda r: float(r.get("volume", 0) or 0), reverse=True)
+top5 = all_ranked[:5]
+queued_signals = all_ranked[5:]
 total_signals = len(rows)
 
 # ── KPI 列 ────────────────────────────────────────────────────────────────────
@@ -282,11 +287,61 @@ if top5:
 else:
     st.info("此日期無符合條件的訊號。")
 
+# ── 排隊訊號（排名第6名以後） ─────────────────────────────────────────────────
+if queued_signals:
+    st.markdown(
+        f"### ⏳ 排隊等待 &nbsp;<span class='badge-amb'>{len(queued_signals)} 筆 · 等待部位空缺</span>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        "<div class='info-note'>"
+        "⏳ 以下訊號符合三項進場條件，但成交量排名在第5名之後，目前5個部位全數佔滿。"
+        "當現有持倉觸及止損或止盈出場後，依序由此清單填補空缺。"
+        "</div>",
+        unsafe_allow_html=True,
+    )
+    q_headers = ["排名","代碼","股票名稱","成交量（張）","收盤價","漲跌幅","得分","前高","止損 (−10%)","止盈 (+50%)","狀態"]
+    th_q = "".join(
+        f"<th style='padding:8px 12px;text-align:left;color:#8b949e;"
+        f"border-bottom:1px solid #30363d;white-space:nowrap'>{h}</th>"
+        for h in q_headers
+    )
+    q_rows_html = ""
+    for qi, r in enumerate(queued_signals, len(top5) + 1):
+        price = float(r.get("price", 0) or 0)
+        status_html = "<span style='color:#d29922;font-weight:600'>⏳ 排隊等待</span>"
+        vals = [
+            qi,
+            r.get("symbol", ""),
+            r.get("name", ""),
+            fmt_vol(r.get("volume", 0)),
+            fmt_price(price),
+            fmt_pct(r.get("changePct", 0)),
+            r.get("points", 0),
+            fmt_price(r.get("h", 0)),
+            fmt_price(price * 0.9),
+            fmt_price(price * 1.5),
+            status_html,
+        ]
+        tds = "".join(
+            f"<td style='padding:7px 12px;border-bottom:1px solid #21262d'>{v}</td>"
+            for v in vals
+        )
+        q_rows_html += f"<tr style='opacity:0.65'>{tds}</tr>"
+    q_table = (
+        "<div style='overflow-x:auto'>"
+        "<table style='width:100%;border-collapse:collapse;font-size:16px'>"
+        "<thead><tr>" + th_q + "</tr></thead>"
+        "<tbody>" + q_rows_html + "</tbody>"
+        "</table></div>"
+    )
+    st.markdown(q_table, unsafe_allow_html=True)
+
 st.divider()
 
-# ── 持倉明細 ──────────────────────────────────────────────────────────────────
+# ── 持倉明細 ─────────────────────────────────────────────────────
 st.markdown(
-    f"### ◉ 持倉明細 &nbsp;<span class='badge-blu'>持有{held}個 · {slots_free}個空位</span>",
+    f"### ◎ 持倉明細 &nbsp;<span class='badge-blu'>持有{held}個·{slots_free}個空位</span>",
     unsafe_allow_html=True,
 )
 
@@ -307,17 +362,18 @@ if OPEN_POSITIONS:
                 fmt_pct(ret), pnl_str, action]
         tds = "".join(f"<td style='padding:7px 12px;border-bottom:1px solid #21262d'>{v}</td>" for v in vals)
         pos_rows_html += f"<tr style='{bg}'>{tds}</tr>"
-    pos_html = f"""
-<div style='overflow-x:auto'>
-<table style='width:100%;border-collapse:collapse;font-size:16px'>
-<thead><tr>{th2}</tr></thead>
-<tbody>{pos_rows_html}</tbody>
-</table></div>"""
+    pos_html = (
+        "<div style='overflow-x:auto'>"
+        "<table style='width:100%;border-collapse:collapse;font-size:16px'>"
+        "<thead><tr>" + th2 + "</tr></thead>"
+        "<tbody>" + pos_rows_html + "</tbody>"
+        "</table></div>"
+    )
     st.markdown(pos_html, unsafe_allow_html=True)
 else:
     st.info("目前無持倉。")
 
-# ── 頁尾 ──────────────────────────────────────────────────────────────────────
+# ── 頁尾 ──────────────────────────────────────────────────────
 st.divider()
 st.caption(
     f"mymax21 · SL10_TP50 · 僅限台股 · "
